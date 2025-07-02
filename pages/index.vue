@@ -1,5 +1,5 @@
 <template>
-  <v-form v-model="valid">
+  <v-form v-model="valid" ref="form">
     <v-container>
       <v-row>
         <v-col cols="12" md="4">
@@ -38,8 +38,8 @@
       </v-row>
 
       <v-row align="center">
-        <v-btn :loading="doing" @click="doSomething" class="mt-4">
-          Do something
+        <v-btn :loading="submitting" @click="submit" class="mt-4">
+          Submit
         </v-btn>
 
         <v-btn
@@ -83,9 +83,12 @@
 </template>
 
 <script setup lang="ts">
+import type { VForm } from "vuetify/components";
+
 const valid = ref(false);
-const doing = ref(false);
+const submitting = ref(false);
 const liking = ref(false);
+const form = ref<VForm>();
 
 const formData = ref({
   firstname: "",
@@ -108,8 +111,16 @@ const emailRules = [
 // Initialize toast functionality
 const { success, error, warning, info } = useToast();
 
-async function doSomething() {
-  doing.value = true;
+async function submit() {
+  if (!form.value) return;
+
+  const { valid } = await form.value.validate();
+
+  if (!valid) {
+    return;
+  }
+
+  submitting.value = true;
 
   try {
     await new Promise((resolve) => setTimeout(resolve, 1000));
@@ -117,7 +128,7 @@ async function doSomething() {
   } catch (err) {
     error("Something went wrong!");
   } finally {
-    doing.value = false;
+    submitting.value = false;
   }
 }
 
