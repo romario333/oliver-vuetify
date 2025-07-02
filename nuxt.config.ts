@@ -11,10 +11,8 @@ export default defineNuxtConfig({
       /* vuetify options */
     },
   },
-  nitro: {
-    prerender: {
-      // Workaround for "Error: [404] Page not found: /manifest.json"
-      failOnError: false,
-    },
+
+  routeRules: {
+    "/": { prerender: false },
   },
 });
