@@ -78,6 +78,8 @@
       <v-row class="other">
         <v-time-picker v-model="formData.timeOfBirth"> </v-time-picker>
       </v-row>
+
+      <pre>{{ JSON.stringify(formData, null, 2) }}</pre>
     </v-container>
   </v-form>
 </template>
@@ -85,16 +87,24 @@
 <script setup lang="ts">
 import type { VForm } from "vuetify/components";
 
+interface FormData {
+  firstname: string;
+  lastname: string;
+  email: string;
+  dateOfBirth?: Date;
+  timeOfBirth: string;
+}
+
 const valid = ref(false);
 const submitting = ref(false);
 const liking = ref(false);
 const form = ref<VForm>();
 
-const formData = ref({
+const formData = ref<FormData>({
   firstname: "",
   lastname: "",
   email: "",
-  dateOfBirth: "",
+  dateOfBirth: undefined,
   timeOfBirth: "",
 });
 
@@ -144,6 +154,14 @@ async function like() {
     liking.value = false;
   }
 }
+
+watch(
+  formData,
+  (newValue) => {
+    console.log("formData changed:", newValue);
+  },
+  { deep: true }
+);
 </script>
 
 <style scoped>

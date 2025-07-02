@@ -11,8 +11,4 @@ export default defineNuxtConfig({
       /* vuetify options */
     },
   },
-
-  routeRules: {
-    "/": { prerender: false },
-  },
 });
